@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MockConfigurationDocumentBuilder {
+    public static final String DUMMY_ID = "sdfgj";
     public static final String DUMMY_APPLICATION_NAME = "TestApp";
     public static final String DUMMY_PROPERTY_NAME = "TEST";
     public static final DataType DUMMY_TYPE = DataType.STRING;
     public static final String DUMMY_VALUE = "test";
+    public static final Boolean DUMMY_ACTIVE = true;
 
     public ConfigurationDocument buildDefault() {
         ConfigurationDocument data = new ConfigurationDocument();
@@ -17,6 +19,7 @@ public class MockConfigurationDocumentBuilder {
         data.setName(DUMMY_PROPERTY_NAME);
         data.setType(DUMMY_TYPE);
         data.setValue(DUMMY_VALUE);
+        data.setActive(DUMMY_ACTIVE);
         return data;
     }
 }

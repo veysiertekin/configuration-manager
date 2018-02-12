@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
 import static challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +62,9 @@ public class ConfigurationRepositoryTest {
     public void get_by_application_name() {
         ConfigurationDocument data = configurationDocumentBuilder.buildDefault();
         data = configurationRepository.save(data);
-        List<ConfigurationDocument> result = configurationRepository.findByApplicationName(data.getApplicationName());
+
+        Pageable pageable = new PageRequest(FIRST_PAGE, PAGE_SIZE);
+        Page<ConfigurationDocument> result = configurationRepository.findByApplicationName(data.getApplicationName(), pageable);
         assertThat(result)
                 .hasSize(1)
                 .element(0)

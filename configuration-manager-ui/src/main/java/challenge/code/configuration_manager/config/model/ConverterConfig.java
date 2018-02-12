@@ -1,8 +1,6 @@
 package challenge.code.configuration_manager.config.model;
 
-import challenge.code.configuration_manager.api.model.converter.ConfigurationDocumentConverter;
-import challenge.code.configuration_manager.api.model.converter.ConfigurationDtoConverter;
-import challenge.code.configuration_manager.api.model.converter.GetConfigurationsPagingRequestConverter;
+import challenge.code.configuration_manager.api.model.converter.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
@@ -16,6 +14,8 @@ public class ConverterConfig {
         service.addConverter(new ConfigurationDocumentConverter());
         service.addConverter(new ConfigurationDtoConverter());
         service.addConverter(new GetConfigurationsPagingRequestConverter());
+        service.addConverter(new SaveConfigurationRequestConverter());
+        service.addConverter(new GetByApplicationNamePagingRequestConverter());
         return service;
     }
 }
