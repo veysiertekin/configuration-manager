@@ -51,7 +51,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         ConfigurationDocument document = conversionService.convert(request, ConfigurationDocument.class);
         try {
             document = configurationRepository.save(document);
-        }catch (DuplicateKeyException e){
+        } catch (DuplicateKeyException e) {
             throw new PropertyAlreadyExistsException(e);
         }
         return conversionService.convert(document, ConfigurationDto.class);

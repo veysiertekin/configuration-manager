@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(reason = "Property already exists!", value = HttpStatus.CONFLICT)
 public class PropertyAlreadyExistsException extends RuntimeException {
+    public PropertyAlreadyExistsException() {
+    }
+
     public PropertyAlreadyExistsException(DuplicateKeyException e) {
         super(e);
     }
