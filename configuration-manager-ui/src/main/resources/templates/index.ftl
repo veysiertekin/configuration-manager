@@ -35,7 +35,7 @@
         <th scope="col">Application Name</th>
     </tr>
     </thead>
-    <tbody id="stock-table">
+    <tbody id="configuration-table">
     </tbody>
 </table>
 <nav>

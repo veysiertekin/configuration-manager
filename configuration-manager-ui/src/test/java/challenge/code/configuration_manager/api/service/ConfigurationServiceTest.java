@@ -52,14 +52,14 @@ public class ConfigurationServiceTest {
     }
 
     @Test
-    public void get_stocks_should_get_empty_list() {
+    public void get_configurations_should_get_empty_list() {
         PageRequest pageRequest = pageRequestBuilder.buildValid();
         Page<ConfigurationDocument> expectedResult = pagingConfigurationDocumentBuilder.buildEmpty();
         assertThatPageLoadingProduceExpectedResult(pageRequest, expectedResult);
     }
 
     @Test
-    public void get_stocks_should_get_one_entity() {
+    public void get_configurations_should_get_one_entity() {
         PageRequest pageRequest = pageRequestBuilder.buildValid();
         Page<ConfigurationDocument> expectedResult = pagingConfigurationDocumentBuilder.buildWithSingleElement();
         assertThatPageLoadingProduceExpectedResult(pageRequest, expectedResult);

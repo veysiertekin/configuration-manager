@@ -18,8 +18,8 @@ public class MockPagingConfigurationDocumentBuilder {
     }
 
     public Page<ConfigurationDocument> buildWithSingleElement() {
-        final ArrayList<ConfigurationDocument> stockEntities = new ArrayList<>();
-        stockEntities.add(configurationDocumentBuilder.buildDefault());
-        return new PageImpl<>(stockEntities);
+        final ArrayList<ConfigurationDocument> configurationEntities = new ArrayList<>();
+        configurationEntities.add(configurationDocumentBuilder.buildDefault());
+        return new PageImpl<>(configurationEntities);
     }
 }

@@ -12,7 +12,9 @@ public class ConfigurationDocumentConverter implements Converter<ConfigurationDo
         ConfigurationDto data = new ConfigurationDto();
         data.setActive(configurationDocument.getActive());
         data.setApplicationName(configurationDocument.getApplicationName());
-        data.setId(configurationDocument.getId().toString());
+        if (configurationDocument.getId() != null) {
+            data.setId(configurationDocument.getId().toString());
+        }
         data.setName(configurationDocument.getName());
         data.setType(configurationDocument.getType());
         data.setValue(configurationDocument.getValue());
