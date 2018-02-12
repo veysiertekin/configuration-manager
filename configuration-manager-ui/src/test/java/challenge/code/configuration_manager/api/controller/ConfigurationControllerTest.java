@@ -2,7 +2,6 @@ package challenge.code.configuration_manager.api.controller;
 
 import challenge.code.configuration_manager.api.model.builder.MockPageRequestBuilder;
 import challenge.code.configuration_manager.api.model.dto.ConfigurationDto;
-import challenge.code.configuration_manager.api.model.request.GetConfigurationsPagingRequest;
 import challenge.code.configuration_manager.api.service.ConfigurationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -70,7 +70,7 @@ public class ConfigurationControllerTest {
 
     @Test
     public void get_configurations_should_succeed_with_empty_result() throws Exception {
-        final GetConfigurationsPagingRequest pageRequest = pageRequestBuilder.buildValid();
+        final PageRequest pageRequest = pageRequestBuilder.buildValid();
         final PageImpl<ConfigurationDto> expectedResult = new PageImpl<>(new ArrayList<>());
 
         when(configurationService.getConfigurations(pageRequest)).thenReturn(expectedResult);

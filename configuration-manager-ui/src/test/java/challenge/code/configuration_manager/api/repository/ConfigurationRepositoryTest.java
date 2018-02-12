@@ -1,6 +1,6 @@
 package challenge.code.configuration_manager.api.repository;
 
-import challenge.code.configuration_manager.api.model.DataType;
+import challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder;
 import challenge.code.configuration_manager.api.model.document.ConfigurationDocument;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
@@ -22,16 +23,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ConfigurationRepositoryTest {
 
-    private static final String DUMMY_APPLICATION_NAME = "TestApp";
-    private static final String DUMMY_PROPERTY_NAME = "TEST";
-    private static final DataType DUMMY_TYPE = DataType.STRING;
-    private static final String DUMMY_VALUE = "test";
-
     private static final int FIRST_PAGE = 0;
     private static final int PAGE_SIZE = 10;
 
     @Autowired
     private ConfigurationRepository configurationRepository;
+
+    @Autowired
+    private MockConfigurationDocumentBuilder configurationDocumentBuilder;
 
     @Before
     public void setUp() {
@@ -40,7 +39,7 @@ public class ConfigurationRepositoryTest {
 
     @Test
     public void save_dummy_data() {
-        ConfigurationDocument data = generateDummyData();
+        ConfigurationDocument data = configurationDocumentBuilder.buildDefault();
 
         data = configurationRepository.save(data);
         assertThat(data)
@@ -54,7 +53,7 @@ public class ConfigurationRepositoryTest {
 
     @Test
     public void get_saved_dummy_data() {
-        ConfigurationDocument data = generateDummyData();
+        ConfigurationDocument data = configurationDocumentBuilder.buildDefault();
         data = configurationRepository.save(data);
         ConfigurationDocument result = configurationRepository.findOne(data.getId().toString());
         assertThat(result)
@@ -63,7 +62,7 @@ public class ConfigurationRepositoryTest {
 
     @Test
     public void get_by_application_name() {
-        ConfigurationDocument data = generateDummyData();
+        ConfigurationDocument data = configurationDocumentBuilder.buildDefault();
         data = configurationRepository.save(data);
         List<ConfigurationDocument> result = configurationRepository.findByApplicationName(data.getApplicationName());
         assertThat(result)
@@ -74,7 +73,7 @@ public class ConfigurationRepositoryTest {
 
     @Test
     public void get_all_with_pagination() {
-        ConfigurationDocument data = generateDummyData();
+        ConfigurationDocument data = configurationDocumentBuilder.buildDefault();
         configurationRepository.save(data);
 
         Pageable pageable = new PageRequest(FIRST_PAGE, PAGE_SIZE);
@@ -87,15 +86,6 @@ public class ConfigurationRepositoryTest {
                 .isEqualTo(1);
         assertThat(result.getTotalElements())
                 .isEqualTo(1);
-    }
-
-    private ConfigurationDocument generateDummyData() {
-        ConfigurationDocument data = new ConfigurationDocument();
-        data.setApplicationName(DUMMY_APPLICATION_NAME);
-        data.setName(DUMMY_PROPERTY_NAME);
-        data.setType(DUMMY_TYPE);
-        data.setValue(DUMMY_VALUE);
-        return data;
     }
 
     private void cleanUpApplicationData() {

@@ -4,7 +4,9 @@ import challenge.code.configuration_manager.api.model.dto.ConfigurationDto;
 import challenge.code.configuration_manager.api.model.request.GetConfigurationsPagingRequest;
 import challenge.code.configuration_manager.api.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +19,16 @@ import static challenge.code.configuration_manager.api.controller.endpoint.Confi
 
 @RestController
 public class ConfigurationController {
-  @Autowired
-  private ConfigurationService configurationService;
+    @Autowired
+    private ConfigurationService configurationService;
 
-  @GetMapping(GET_CONFIGURATIONS)
-  public @ResponseBody
-  ResponseEntity<Page<ConfigurationDto>> getConfigurations(@Valid GetConfigurationsPagingRequest request) {
-    return new ResponseEntity<>(configurationService.getConfigurations(request), HttpStatus.OK);
-  }
+    @Autowired
+    private ConversionService conversionService;
+
+    @GetMapping(GET_CONFIGURATIONS)
+    public @ResponseBody
+    ResponseEntity<Page<ConfigurationDto>> getConfigurations(@Valid GetConfigurationsPagingRequest request) {
+        PageRequest result = conversionService.convert(request, PageRequest.class);
+        return new ResponseEntity<>(configurationService.getConfigurations(result), HttpStatus.OK);
+    }
 }
