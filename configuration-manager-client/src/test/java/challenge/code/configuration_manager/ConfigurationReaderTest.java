@@ -5,15 +5,16 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ConfigurationReaderTest {
-  private String applicationName = "SERVICE-A";
-  private String connectionString = "mongodb://db1.example.net:27017/test";
-  private Integer refreshIntervalInMs = 500;
 
   @Test
   void should_create_new() {
-    ConfigurationReaderFactory configurationReaderFactory = new ConfigurationReaderFactory();
-    ConfigurationReader reader = configurationReaderFactory.createReader(applicationName, connectionString, refreshIntervalInMs);
+    ConfigurationReader reader = creationReader();
     assertThat(reader)
       .isNotNull();
+  }
+
+  private ConfigurationReader creationReader() {
+    ConfigurationReaderFactory configurationReaderFactory = new ConfigurationReaderFactory();
+    return configurationReaderFactory.createReader(TestConstants.APPLICATION_NAME, TestConstants.CONNECTION_STRING, TestConstants.REFRESH_INTERVAL_IN_MS);
   }
 }

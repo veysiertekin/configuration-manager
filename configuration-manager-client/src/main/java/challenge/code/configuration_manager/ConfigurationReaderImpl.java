@@ -1,5 +1,7 @@
 package challenge.code.configuration_manager;
 
+import java.io.Serializable;
+
 public class ConfigurationReaderImpl implements ConfigurationReader {
     private final String applicationName;
     private final String connectionString;
