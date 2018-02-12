@@ -47,19 +47,19 @@ public class ConfigurationClientTest {
   }
 
   @Test
-  public void putOrUpdate_should_fail_with_null_name() {
+  public void put_or_update_should_fail_with_null_name() {
     assertThatThrownBy(() -> configurationClient.putOrUpdate(null, DataType.BOOLEAN, new Object(), true))
       .isInstanceOf(NullPointerException.class);
   }
 
   @Test
-  public void putOrUpdate_should_fail_with_null_type() {
+  public void put_or_update_should_fail_with_null_type() {
     assertThatThrownBy(() -> configurationClient.putOrUpdate("asd", null, new Object(), true))
       .isInstanceOf(NullPointerException.class);
   }
 
   @Test
-  public void putOrUpdate_should_fail_with_null_active() {
+  public void put_or_update_should_fail_with_null_active() {
     assertThatThrownBy(() -> configurationClient.putOrUpdate("sdf", DataType.BOOLEAN, new Object(), null))
       .isInstanceOf(NullPointerException.class);
   }
