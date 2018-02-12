@@ -1,0 +1,17 @@
+spring:
+  application.name: configuration-manager-ui
+
+server:
+  port: 8080
+  compression.enabled:  true
+  jetty:
+# By default Jetty does not have a max-thread setting, we will apply this change in the configuration file.
+    max-threads:  200
+
+---
+spring:
+  profiles: test
+
+---
+spring:
+  profiles: production

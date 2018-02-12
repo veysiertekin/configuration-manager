@@ -1,0 +1,21 @@
+version: '2.1'
+
+services:
+  configuration-manager:
+    image: trendyol/configuration-manager-ui:0.1.0
+    ports:
+     - "8080:8080"
+    mem_limit: 1G
+    environment:
+     - ACTIVE_PROFILES=test
+     - XMS=512M
+     - XMX=512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+    networks:
+      - dev
+    restart: always
+
+networks:
+  dev:
+    driver: bridge
