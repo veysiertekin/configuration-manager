@@ -1,5 +1,8 @@
-package challenge.code.configuration_manager;
+package challenge.code.configuration_manager.reader;
 
+import challenge.code.configuration_manager.TestConstants;
+import challenge.code.configuration_manager.reader.ConfigurationReader;
+import challenge.code.configuration_manager.reader.ConfigurationReaderFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

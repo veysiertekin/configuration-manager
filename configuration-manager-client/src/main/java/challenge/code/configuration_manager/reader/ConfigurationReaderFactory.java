@@ -1,4 +1,4 @@
-package challenge.code.configuration_manager;
+package challenge.code.configuration_manager.reader;
 
 public class ConfigurationReaderFactory {
   public ConfigurationReader createReader(String applicationName, String connectionString, Integer refreshIntervalInMs) {

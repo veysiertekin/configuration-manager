@@ -1,4 +1,4 @@
-package challenge.code.configuration_manager;
+package challenge.code.configuration_manager.reader;
 
 public class ConfigurationReaderBuilder {
   public SetApplicationName build() {
