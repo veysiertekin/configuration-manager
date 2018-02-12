@@ -1,6 +1,5 @@
 package challenge.code.configuration_manager;
 
-import challenge.code.configuration_manager.client.impl.MongoDbConfigurationClient;
 import challenge.code.configuration_manager.client.model.DataType;
 import org.testcontainers.containers.GenericContainer;
 
@@ -17,16 +16,12 @@ public class TestData {
   private String applicationName = "SERVICE-A";
   private Integer refreshIntervalInMs = 500;
 
-  public GenericContainer createMongoContainer() {
-    return new GenericContainer(mongoDockerImage).withExposedPorts(mongoPort);
-  }
-
-  public MongoDbConfigurationClient createMongoClient(GenericContainer container) {
-    return new MongoDbConfigurationClient(applicationName, getConnectionString(container));
-  }
-
   public String getConnectionString(GenericContainer container) {
     return String.format(CONNECTION_STRING_PATTERN, container.getMappedPort(mongoPort));
+  }
+
+  public GenericContainer createMongoContainer() {
+    return new GenericContainer(mongoDockerImage).withExposedPorts(mongoPort);
   }
 
   public Stream<Object[]> produceTestData() {

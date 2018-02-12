@@ -1,11 +1,17 @@
 package challenge.code.configuration_manager.reader;
 
+import challenge.code.configuration_manager.client.ConfigurationClientFactory;
 import challenge.code.configuration_manager.reader.impl.ConfigurationReaderImpl;
 
 public class ConfigurationReaderBuilder {
   public SetApplicationName build() {
-    return applicationName -> connectionString -> refreshIntervalInMs ->
-      new ConfigurationReaderImpl(applicationName, connectionString, refreshIntervalInMs);
+    return applicationName -> connectionString ->
+      new ConfigurationReaderImpl(ConfigurationClientFactory.createWithoutCache(applicationName, connectionString));
+  }
+
+  public SetApplicationName buildWithCaffeine(Integer refreshIntervalInMs) {
+    return applicationName -> connectionString ->
+      new ConfigurationReaderImpl(ConfigurationClientFactory.createWithCaffeine(applicationName, connectionString, refreshIntervalInMs));
   }
 
   public interface SetApplicationName {
@@ -13,10 +19,6 @@ public class ConfigurationReaderBuilder {
   }
 
   public interface SetConnectionString {
-    SetRefreshIntervals setConnectionString(String connectionString);
-  }
-
-  public interface SetRefreshIntervals {
-    ConfigurationReader setRefreshIntervalInMs(Integer refreshIntervalInMs);
+    ConfigurationReader setConnectionString(String connectionString);
   }
 }

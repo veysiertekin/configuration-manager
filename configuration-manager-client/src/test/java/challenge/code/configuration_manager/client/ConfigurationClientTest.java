@@ -22,13 +22,13 @@ public class ConfigurationClientTest {
 
   @Before
   public void setUp() {
-    configurationClient = testData.createMongoClient(mongo);
+    configurationClient = ConfigurationClientFactory.createWithoutCache(testData.getApplicationName(), testData.getConnectionString(mongo));
   }
 
   @Test
-  public void put_and_get_test_data() {
-    assertThat(configurationClient.putOrUpdate(IS_BASKET_ENABLED.value, DataType.BOOLEAN, Boolean.TRUE, Boolean.TRUE))
-      .isTrue();
+  public void successfully_put_and_load_test_data() {
+    final boolean saveSucceed = configurationClient.putOrUpdate(IS_BASKET_ENABLED.value, DataType.BOOLEAN, Boolean.TRUE, Boolean.TRUE);
+    assertThat(saveSucceed).isTrue();
 
     ConfigurationDto data = configurationClient.get(IS_BASKET_ENABLED.value);
 
@@ -38,11 +38,9 @@ public class ConfigurationClientTest {
   }
 
   @Test
-  public void putOrUpdateTestData() {
-    testData.produceTestData().forEach(
-      data ->
-        assertThat(configurationClient.putOrUpdate((String) data[0], (DataType) data[1], data[2], (Boolean) data[3]))
-          .isTrue()
+  public void successfully_put_or_update_test_data() {
+    testData.produceTestData().forEach(data ->
+      assertThat(configurationClient.putOrUpdate((String) data[0], (DataType) data[1], data[2], (Boolean) data[3])).isTrue()
     );
   }
 

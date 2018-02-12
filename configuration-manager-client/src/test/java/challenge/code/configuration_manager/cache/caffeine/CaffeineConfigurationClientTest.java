@@ -2,6 +2,7 @@ package challenge.code.configuration_manager.cache.caffeine;
 
 import challenge.code.configuration_manager.TestData;
 import challenge.code.configuration_manager.client.ConfigurationClient;
+import challenge.code.configuration_manager.client.ConfigurationClientFactory;
 import challenge.code.configuration_manager.client.model.DataType;
 import challenge.code.configuration_manager.client.model.dto.ConfigurationDto;
 import org.junit.Before;
@@ -20,21 +21,21 @@ public class CaffeineConfigurationClientTest {
   @ClassRule
   public static final GenericContainer mongo = testData.createMongoContainer();
 
-  private ConfigurationClient mongoClient;
-  private ConfigurationClient caffeineClient;
+  private ConfigurationClient clientWithoutCache;
+  private ConfigurationClient cachedClient;
 
   @Before
   public void setUp() {
-    mongoClient = testData.createMongoClient(mongo);
-    caffeineClient = new CaffeineConfigurationClient(mongoClient, testData.getRefreshIntervalInMs());
+    clientWithoutCache = ConfigurationClientFactory.createWithoutCache(testData.getApplicationName(), testData.getConnectionString(mongo));
+    cachedClient = ConfigurationClientFactory.createWithCaffeine(testData.getApplicationName(), testData.getConnectionString(mongo), testData.getRefreshIntervalInMs());
   }
 
   @Test
   public void get() {
-    assertThat(mongoClient.putOrUpdate(IS_BASKET_ENABLED.value, DataType.BOOLEAN, Boolean.TRUE, Boolean.TRUE))
+    assertThat(clientWithoutCache.putOrUpdate(IS_BASKET_ENABLED.value, DataType.BOOLEAN, Boolean.TRUE, Boolean.TRUE))
       .isTrue();
 
-    ConfigurationDto value = caffeineClient.get(IS_BASKET_ENABLED.value);
+    ConfigurationDto value = cachedClient.get(IS_BASKET_ENABLED.value);
     assertThat(value)
       .hasFieldOrPropertyWithValue("name", IS_BASKET_ENABLED.value)
       .hasFieldOrPropertyWithValue("type", DataType.BOOLEAN)
@@ -44,7 +45,7 @@ public class CaffeineConfigurationClientTest {
 
   @Test
   public void put_or_update_should_fail_due_to_unsupported_method() {
-    assertThatThrownBy(() -> caffeineClient.putOrUpdate(IS_BASKET_ENABLED.value, DataType.BOOLEAN, Boolean.TRUE, Boolean.TRUE))
+    assertThatThrownBy(() -> cachedClient.putOrUpdate(IS_BASKET_ENABLED.value, DataType.BOOLEAN, Boolean.TRUE, Boolean.TRUE))
       .isInstanceOf(UnsupportedOperationException.class);
   }
 }

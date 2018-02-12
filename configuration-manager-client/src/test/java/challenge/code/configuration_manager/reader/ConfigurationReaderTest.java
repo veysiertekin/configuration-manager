@@ -1,7 +1,8 @@
 package challenge.code.configuration_manager.reader;
 
 import challenge.code.configuration_manager.TestData;
-import challenge.code.configuration_manager.client.impl.MongoDbConfigurationClient;
+import challenge.code.configuration_manager.client.ConfigurationClient;
+import challenge.code.configuration_manager.client.ConfigurationClientFactory;
 import challenge.code.configuration_manager.client.model.DataType;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -17,33 +18,49 @@ public class ConfigurationReaderTest {
   @ClassRule
   public static final GenericContainer mongo = testData.createMongoContainer();
 
-  private MongoDbConfigurationClient configurationClient;
+  private ConfigurationClient configurationClient;
 
   @Before
   public void setUp() {
-    configurationClient = testData.createMongoClient(mongo);
+    configurationClient = ConfigurationClientFactory.createWithoutCache(testData.getApplicationName(), testData.getConnectionString(mongo));
   }
 
   @Test
   public void should_create_new() {
-    ConfigurationReader reader = creationReader();
-    assertThat(reader)
-      .isNotNull();
+    ConfigurationReader reader = createReaderWithoutCache();
+    assertThat(reader).isNotNull();
   }
 
   @Test
-  public void should_get_key() {
-    assertThat(configurationClient.putOrUpdate(SITE_NAME.value, DataType.STRING, "trendyol", Boolean.TRUE))
-      .isTrue();
+  public void should_get_without_cache() {
+    final boolean saveSucceed = configurationClient.putOrUpdate(SITE_NAME.value, DataType.STRING, "trendyol", Boolean.TRUE);
+    assertThat(saveSucceed).isTrue();
 
-    ConfigurationReader reader = creationReader();
+    ConfigurationReader reader = createReaderWithoutCache();
     String value = reader.getValue(SITE_NAME.value, String.class);
-    assertThat(value)
-      .isEqualTo("trendyol");
+    assertThat(value).isEqualTo("trendyol");
   }
 
-  private ConfigurationReader creationReader() {
-    return ConfigurationReaderFactory.createReader(
+  @Test
+  public void should_get_with_cache_provider() {
+    final boolean saveSucceed = configurationClient.putOrUpdate(SITE_NAME.value, DataType.STRING, "trendyol", Boolean.TRUE);
+    assertThat(saveSucceed).isTrue();
+
+    ConfigurationReader reader = createReaderWithCaffeineCache();
+
+    String value = reader.getValue(SITE_NAME.value, String.class);
+    assertThat(value).isEqualTo("trendyol");
+  }
+
+  private ConfigurationReader createReaderWithoutCache() {
+    return ConfigurationReaderFactory.createWithoutCache(
+      testData.getApplicationName(),
+      testData.getConnectionString(mongo)
+    );
+  }
+
+  private ConfigurationReader createReaderWithCaffeineCache() {
+    return ConfigurationReaderFactory.createWithCaffeine(
       testData.getApplicationName(),
       testData.getConnectionString(mongo),
       testData.getRefreshIntervalInMs()
