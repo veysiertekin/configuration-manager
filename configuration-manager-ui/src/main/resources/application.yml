@@ -11,7 +11,14 @@ server:
 ---
 spring:
   profiles: test
+  data:
+    mongodb:
+      host: localhost
+      database: test
 
 ---
 spring:
   profiles: production
+  data.mongodb:
+    host: localhost
+    port: 27017

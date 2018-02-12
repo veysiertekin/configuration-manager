@@ -32,54 +32,54 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = ConfigurationController.class)
 @AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 public class ConfigurationControllerTest {
-  private static final String GET_CONFIGURATIONS = "/api/configurations?pageNumber=%s&pageSize=%s";
+    private static final String GET_CONFIGURATIONS = "/api/configurations?pageNumber=%s&pageSize=%s";
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @MockBean
-  private ConfigurationService configurationService;
+    @MockBean
+    private ConfigurationService configurationService;
 
-  @Autowired
-  private MockPageRequestBuilder pageRequestBuilder;
+    @Autowired
+    private MockPageRequestBuilder pageRequestBuilder;
 
-  @Test
-  public void get_configurations_should_fail_with_empty_page() throws Exception {
-    mockMvc.perform(get(String.format(GET_CONFIGURATIONS, "", PAGE_SIZE)))
-      .andDo(MockMvcResultHandlers.print())
-      .andExpect(status().isBadRequest())
-      .andExpect(content().string(equalTo("")));
-  }
+    @Test
+    public void get_configurations_should_fail_with_empty_page() throws Exception {
+        mockMvc.perform(get(String.format(GET_CONFIGURATIONS, "", PAGE_SIZE)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(equalTo("")));
+    }
 
 
-  @Test
-  public void get_stocks_should_fail_with_empty_size() throws Exception {
-    mockMvc.perform(get(String.format(GET_CONFIGURATIONS, FIRST_PAGE_NUMBER, "")))
-      .andDo(MockMvcResultHandlers.print())
-      .andExpect(status().isBadRequest())
-      .andExpect(content().string(equalTo("")));
-  }
+    @Test
+    public void get_configurations_should_fail_with_empty_size() throws Exception {
+        mockMvc.perform(get(String.format(GET_CONFIGURATIONS, FIRST_PAGE_NUMBER, "")))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(equalTo("")));
+    }
 
-  @Test
-  public void get_stocks_should_fail_with_invalid_size() throws Exception {
-    mockMvc.perform(get(String.format(GET_CONFIGURATIONS, FIRST_PAGE_NUMBER, INVALID_PAGE_SIZE)))
-      .andDo(MockMvcResultHandlers.print())
-      .andExpect(status().isBadRequest())
-      .andExpect(content().string(equalTo("")));
-  }
+    @Test
+    public void get_configurations_should_fail_with_invalid_size() throws Exception {
+        mockMvc.perform(get(String.format(GET_CONFIGURATIONS, FIRST_PAGE_NUMBER, INVALID_PAGE_SIZE)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(equalTo("")));
+    }
 
-  @Test
-  public void get_stocks_should_succeed_with_empty_result() throws Exception {
-    final GetConfigurationsPagingRequest pageRequest = pageRequestBuilder.buildValid();
-    final PageImpl<ConfigurationDto> expectedResult = new PageImpl<>(new ArrayList<>());
+    @Test
+    public void get_configurations_should_succeed_with_empty_result() throws Exception {
+        final GetConfigurationsPagingRequest pageRequest = pageRequestBuilder.buildValid();
+        final PageImpl<ConfigurationDto> expectedResult = new PageImpl<>(new ArrayList<>());
 
-    when(configurationService.getConfigurations(pageRequest)).thenReturn(expectedResult);
+        when(configurationService.getConfigurations(pageRequest)).thenReturn(expectedResult);
 
-    mockMvc.perform(get(String.format(GET_CONFIGURATIONS, pageRequest.getPageNumber(), pageRequest.getPageSize())))
-      .andDo(MockMvcResultHandlers.print())
-      .andExpect(status().isOk())
-      .andExpect(content().string(containsString("\"content\":[]")));
+        mockMvc.perform(get(String.format(GET_CONFIGURATIONS, pageRequest.getPageNumber(), pageRequest.getPageSize())))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("\"content\":[]")));
 
-    verify(configurationService, times(1)).getConfigurations(pageRequest);
-  }
+        verify(configurationService, times(1)).getConfigurations(pageRequest);
+    }
 }
