@@ -1,4 +1,4 @@
-package challenge.code.configuration_manager.dataclient.model;
+package challenge.code.configuration_manager.client.model;
 
 public enum DataType {
   STRING,

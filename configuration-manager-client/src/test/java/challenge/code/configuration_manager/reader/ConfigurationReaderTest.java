@@ -1,23 +1,52 @@
 package challenge.code.configuration_manager.reader;
 
-import challenge.code.configuration_manager.TestConstants;
-import challenge.code.configuration_manager.reader.ConfigurationReader;
-import challenge.code.configuration_manager.reader.ConfigurationReaderFactory;
-import org.junit.jupiter.api.Test;
+import challenge.code.configuration_manager.TestData;
+import challenge.code.configuration_manager.client.impl.MongoDbConfigurationClient;
+import challenge.code.configuration_manager.client.model.DataType;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.testcontainers.containers.GenericContainer;
 
+import static challenge.code.configuration_manager.TestData.Key.SITE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ConfigurationReaderTest {
+public class ConfigurationReaderTest {
+  private static final TestData testData = new TestData();
+
+  @ClassRule
+  public static final GenericContainer mongo = testData.createMongoContainer();
+
+  private MongoDbConfigurationClient configurationClient;
+
+  @Before
+  public void setUp() {
+    configurationClient = testData.createMongoClient(mongo);
+  }
 
   @Test
-  void should_create_new() {
+  public void should_create_new() {
     ConfigurationReader reader = creationReader();
     assertThat(reader)
       .isNotNull();
   }
 
+  @Test
+  public void should_get_key() {
+    assertThat(configurationClient.putOrUpdate(SITE_NAME.value, DataType.STRING, "trendyol", Boolean.TRUE))
+      .isTrue();
+
+    ConfigurationReader reader = creationReader();
+    String value = reader.getValue(SITE_NAME.value, String.class);
+    assertThat(value)
+      .isEqualTo("trendyol");
+  }
+
   private ConfigurationReader creationReader() {
-    ConfigurationReaderFactory configurationReaderFactory = new ConfigurationReaderFactory();
-    return configurationReaderFactory.createReader(TestConstants.APPLICATION_NAME, TestConstants.CONNECTION_STRING, TestConstants.REFRESH_INTERVAL_IN_MS);
+    return ConfigurationReaderFactory.createReader(
+      testData.getApplicationName(),
+      testData.getConnectionString(mongo),
+      testData.getRefreshIntervalInMs()
+    );
   }
 }
