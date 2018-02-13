@@ -81,4 +81,16 @@ public class ConfigurationDto {
 
         return Objects.hash(id, applicationName, name, type, value, active);
     }
+
+    @Override
+    public String toString() {
+        return "ConfigurationDto{" +
+                "id='" + id + '\'' +
+                ", applicationName='" + applicationName + '\'' +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", value=" + value +
+                ", active=" + active +
+                '}';
+    }
 }
