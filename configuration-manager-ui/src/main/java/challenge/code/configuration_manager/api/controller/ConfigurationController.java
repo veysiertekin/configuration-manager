@@ -51,4 +51,11 @@ public class ConfigurationController {
     ResponseEntity<ConfigurationDto> saveConfiguration(@RequestBody @Valid SaveConfigurationRequest request) {
         return new ResponseEntity<>(configurationService.saveConfiguration(request), HttpStatus.OK);
     }
+
+    @DeleteMapping(DELETE_CONFIGURATION)
+    public @ResponseBody
+    ResponseEntity deleteConfiguration(@PathVariable("configurationId") String id) {
+        configurationService.deleteConfiguration(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -13,4 +13,6 @@ public interface ConfigurationService {
     ConfigurationDto updateConfiguration(String id, SaveConfigurationRequest request);
 
     Page<ConfigurationDto> getConfigurationsByApplicationName(String applicationName, PageRequest result);
+
+    void deleteConfiguration(String id);
 }

@@ -39,6 +39,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
+    public void deleteConfiguration(String id) {
+        configurationRepository.delete(id);
+    }
+
+    @Override
     public ConfigurationDto updateConfiguration(String id, SaveConfigurationRequest request) {
         ConfigurationDocument document = conversionService.convert(request, ConfigurationDocument.class);
         document.setId(new ObjectId(id));

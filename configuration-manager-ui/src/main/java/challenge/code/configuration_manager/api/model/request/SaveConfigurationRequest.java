@@ -1,15 +1,23 @@
 package challenge.code.configuration_manager.api.model.request;
 
 import challenge.code.configuration_manager.api.model.DataType;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class SaveConfigurationRequest {
+    @NotBlank(message = "'applicationName' can not be empty!")
     private String applicationName;
 
+    @NotBlank(message = "'name' can not be empty!")
     private String name;
+
+    @NotNull
     private DataType type;
     private Object value;
+
+    @NotNull
     private Boolean active;
 
     public String getApplicationName() {

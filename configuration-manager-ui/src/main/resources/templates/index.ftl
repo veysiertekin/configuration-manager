@@ -76,6 +76,7 @@
         <th scope="col">Is Active</th>
         <th scope="col">Application Name</th>
         <th scope="col">Action</th>
+        <th scope="col">Delete</th>
     </tr>
     </thead>
     <tbody id="configuration-table">

@@ -89,7 +89,7 @@ var IndexPage = function (options) {
         else
             root.vars.prevButton.addClass("disabled");
 
-        root.vars.pageProgress.text((root.vars.currentPage + 1) + " / " + root.vars.totalPages);
+        root.vars.pageProgress.text((root.vars.totalPages === 0 ? 0 : (root.vars.currentPage + 1)) + " / " + root.vars.totalPages);
 
         if (root.vars.currentPage + 1 < root.vars.totalPages)
             root.vars.nextButton.removeClass("disabled");
@@ -118,6 +118,7 @@ var IndexPage = function (options) {
         root.vars.resetButton.on("click", function (e) {
             root.vars.searchMode = "DEFAULT";
             root.vars.currentPage = 0;
+            root.vars.searchBox.val("");
             root.loadPage();
         });
         root.vars.saveButton.on("click", function (e) {
@@ -125,6 +126,7 @@ var IndexPage = function (options) {
             var row = collectRow(parentForm);
             root.save(row, function () {
                 $(parentForm).trigger("reset");
+                root.vars.resetButton.click();
             });
         });
 
@@ -133,16 +135,39 @@ var IndexPage = function (options) {
             var editMode = $(this).attr("edit-mode");
             if (editMode && editMode == "true") {
                 var row = collectRow(parent);
-                root.update(row);
+                var button = this
+                root.update(row, function () {
+                    $(button).text("Edit");
+                    $(button).attr("edit-mode", false);
+                    parent.find("input,select").prop('disabled', true);
+                });
 
-                $(this).text("Edit");
-                $(this).attr("edit-mode", false);
-                parent.find("input,select").prop('disabled', true);
             } else {
                 $(this).text("Update");
                 $(this).attr("edit-mode", true);
                 parent.find("input,select").prop('disabled', false);
             }
+        });
+
+        $("#configuration-table").on("click", "button.delete", function (e) {
+            var parent = $(this).closest("tr");
+            var row = collectRow(parent);
+
+            var n = new Noty({
+                text: 'Do you really want to delete?',
+                buttons: [
+                    Noty.button('YES', 'btn btn-danger', function () {
+                        root.delete(row);
+                        n.close();
+
+                        root.vars.resetButton.click();
+                    }, {id: 'button1', 'data-status': 'ok'}),
+
+                    Noty.button('NO', 'btn btn-success', function () {
+                        n.close();
+                    })
+                ]
+            }).show();
         });
     };
 
@@ -166,7 +191,7 @@ var IndexPage = function (options) {
         });
     };
 
-    root.update = function (row) {
+    root.update = function (row, callback) {
         var row_id = row.id;
         delete row["id"];
         $.ajax({
@@ -178,6 +203,24 @@ var IndexPage = function (options) {
             data: JSON.stringify(row),
             success: function (result) {
                 root.notifySuccess("Update completed successfully!");
+                callback()
+            },
+            error: function (xhr, status, errorThrown) {
+                root.notifyError(xhr);
+            }
+        });
+    };
+
+    root.delete = function (row) {
+        var row_id = row.id;
+        $.ajax({
+            url: "/api/configurations/" + row_id,
+            beforeSend: function (request) {
+                request.setRequestHeader("Content-Type", "application/json");
+            },
+            type: 'DELETE',
+            success: function (result) {
+                root.notifySuccess("Row deleted successfully!");
             },
             error: function (xhr, status, errorThrown) {
                 root.notifyError(xhr);
@@ -195,10 +238,14 @@ var IndexPage = function (options) {
 
     root.notifyError = function (xhr) {
         var errorData = JSON.parse(xhr.responseText);
+        var message = errorData.message;
+        if (errorData.errors && errorData.errors[0] && errorData.errors[0].defaultMessage) {
+            message = errorData.errors[0].defaultMessage;
+        }
         new Noty({
             type: 'error',
             timeout: 1000,
-            text: errorData.message
+            text: message
         }).show();
     };
 
@@ -230,4 +277,5 @@ var rowTemplate = "<tr><th scope=\"row\"><input type=\"text\" class=\"form-contr
     "<td><input type=\"text\" class=\"form-control configuration-value\" disabled></td>" +
     "<td><select class=\"form-control configuration-active\" disabled><option>true</option><option>false</option></select></td>" +
     "<td><input type=\"text\" class=\"form-control configuration-application-name\" disabled></td>" +
-    "<td><a class=\"page-link btn edit\" href=\"#\">Edit</a></td></tr>";
+    "<td><a class=\"page-link btn edit\" href=\"#\">Edit</a></td>" +
+    "<td><button  type='button' class=\"btn btn-danger delete\" href=\"#\">Delete</button></td></tr>";
