@@ -64,7 +64,7 @@ public class ConfigurationRepositoryTest {
         data = configurationRepository.save(data);
 
         Pageable pageable = new PageRequest(FIRST_PAGE, PAGE_SIZE);
-        Page<ConfigurationDocument> result = configurationRepository.findByApplicationName(data.getApplicationName(), pageable);
+        Page<ConfigurationDocument> result = configurationRepository.findByApplicationNameLike(data.getApplicationName(), pageable);
         assertThat(result)
                 .hasSize(1)
                 .element(0)

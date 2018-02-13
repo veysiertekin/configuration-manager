@@ -10,5 +10,5 @@ import java.util.List;
 public interface ConfigurationRepository extends MongoRepository<ConfigurationDocument, String> {
     List<ConfigurationDocument> removeByApplicationName(String applicationName);
 
-    Page<ConfigurationDocument> findByApplicationName(String applicationName, Pageable pageable);
+    Page<ConfigurationDocument> findByApplicationNameLike(String applicationName, Pageable pageable);
 }

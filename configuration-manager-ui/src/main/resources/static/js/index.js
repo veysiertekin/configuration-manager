@@ -11,6 +11,11 @@ var IndexPage = function (options) {
         pageProgress: $(".pagination li:nth-child(2) .page-link"),
         nextButton: $(".pagination li:last-child .page-link"),
         configurationTable: $("#configuration-table"),
+        saveButton: $("#save-button"),
+        searchBox: $("#search-box"),
+        searchButton: $("#search-button"),
+        resetButton: $("#reset-button"),
+        searchMode: "DEFAULT",
         currentPage: 0,
         totalPages: 0,
         content: []
@@ -40,7 +45,14 @@ var IndexPage = function (options) {
     };
 
     root.loadPage = function (callback) {
-        $.get("/api/configurations?pageNumber=" + root.vars.currentPage + "&pageSize=10", function (data) {
+        var query = "/api/configurations?pageNumber=" + root.vars.currentPage + "&pageSize=10";
+        var searchText = $("#search-box").val();
+
+        if (root.vars.searchMode === "APPLICATION_NAME" && searchText) {
+            query = "/api/configurations/by-application-name?applicationName=" + searchText + "&pageNumber=" + root.vars.currentPage + "&pageSize=10"
+        }
+
+        $.get(query, function (data) {
             root.vars.content = data.content;
             root.vars.totalPages = data.totalPages;
 
@@ -92,28 +104,64 @@ var IndexPage = function (options) {
         root.vars.nextButton.on("click", function (e) {
             root.nextPage();
         });
+        root.vars.searchBox.keypress(function (e) {
+            var key = e.which;
+            if (key === 13) {
+                root.vars.searchButton.click();
+            }
+        });
+        root.vars.searchButton.on("click", function (e) {
+            root.vars.searchMode = "APPLICATION_NAME";
+            root.vars.currentPage = 0;
+            root.loadPage();
+        });
+        root.vars.resetButton.on("click", function (e) {
+            root.vars.searchMode = "DEFAULT";
+            root.vars.currentPage = 0;
+            root.loadPage();
+        });
+        root.vars.saveButton.on("click", function (e) {
+            var parentForm = $(this).closest("form");
+            var row = collectRow(parentForm);
+            root.save(row, function () {
+                $(parentForm).trigger("reset");
+            });
+        });
 
         $("#configuration-table").on("click", "a.edit", function (e) {
             var parent = $(this).closest("tr");
             var editMode = $(this).attr("edit-mode");
             if (editMode && editMode == "true") {
-                var row = {};
-                row.id = $(parent).find(".configuration-id").val();
-                row.name = $(parent).find(".configuration-name").val();
-                row.type = $(parent).find(".configuration-type").val();
-                row.value = $(parent).find(".configuration-value").val();
-                row.active = $(parent).find(".configuration-active").val();
-                row.applicationName = $(parent).find(".configuration-application-name").val();
-
+                var row = collectRow(parent);
                 root.update(row);
 
                 $(this).text("Edit");
                 $(this).attr("edit-mode", false);
                 parent.find("input,select").prop('disabled', true);
             } else {
-                $(this).text("Save");
+                $(this).text("Update");
                 $(this).attr("edit-mode", true);
                 parent.find("input,select").prop('disabled', false);
+            }
+        });
+    };
+
+    root.save = function (row, successCallback, errorCallback) {
+        delete row["id"];
+        $.ajax({
+            url: "/api/configurations",
+            beforeSend: function (request) {
+                request.setRequestHeader("Content-Type", "application/json");
+            },
+            type: 'POST',
+            data: JSON.stringify(row),
+            success: function (result) {
+                root.notifySuccess("Save completed successfully!");
+                successCallback();
+            },
+            error: function (xhr, status, errorThrown) {
+                root.notifyError(xhr);
+                errorCallback();
             }
         });
     };
@@ -129,34 +177,52 @@ var IndexPage = function (options) {
             type: 'PUT',
             data: JSON.stringify(row),
             success: function (result) {
-                new Noty({
-                    type: 'success',
-                    timeout: 1000,
-                    text: "Save operation completed successfully!"
-                }).show();
+                root.notifySuccess("Update completed successfully!");
             },
             error: function (xhr, status, errorThrown) {
-                var errorData = JSON.parse(xhr.responseText);
-                new Noty({
-                    type: 'error',
-                    timeout: 1000,
-                    text: errorData.message
-                }).show();
+                root.notifyError(xhr);
             }
-
         });
+    };
+
+    root.notifySuccess = function (mesage) {
+        new Noty({
+            type: 'success',
+            timeout: 1000,
+            text: mesage
+        }).show();
+    };
+
+    root.notifyError = function (xhr) {
+        var errorData = JSON.parse(xhr.responseText);
+        new Noty({
+            type: 'error',
+            timeout: 1000,
+            text: errorData.message
+        }).show();
     };
 
     root.notifyStats = function (data) {
         new Noty({
+            timeout: 3000,
             type: 'info',
-            text: 'Total pages: ' + data.totalPages + ", Number of stocks: " + data.totalElements
+            text: 'Total pages: ' + data.totalPages + ", Number of records: " + data.totalElements
         }).show();
     };
 
     root.construct(options);
 };
 
+function collectRow(parent) {
+    var row = {};
+    row.id = $(parent).find(".configuration-id").val();
+    row.name = $(parent).find(".configuration-name").val();
+    row.type = $(parent).find(".configuration-type").val();
+    row.value = $(parent).find(".configuration-value").val();
+    row.active = $(parent).find(".configuration-active").val();
+    row.applicationName = $(parent).find(".configuration-application-name").val();
+    return row;
+}
 
 var rowTemplate = "<tr><th scope=\"row\"><input type=\"text\" class=\"form-control configuration-id\" disabled></th>" +
     "<td><input type=\"text\" class=\"form-control configuration-name\" disabled></td>" +

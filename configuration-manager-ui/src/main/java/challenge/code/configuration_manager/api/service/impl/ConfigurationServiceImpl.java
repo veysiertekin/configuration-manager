@@ -34,7 +34,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Override
     public Page<ConfigurationDto> getConfigurationsByApplicationName(String applicationName, PageRequest result) {
-        Page<ConfigurationDocument> data = configurationRepository.findByApplicationName(applicationName, result);
+        Page<ConfigurationDocument> data = configurationRepository.findByApplicationNameLike(applicationName, result);
         return data.map(configurationDocumentConverter);
     }
 
