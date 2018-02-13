@@ -43,13 +43,13 @@ Uygulama jar & docker imajlarının oluşturulması için aşağıdaki komutu ç
 
 #### 1.2. Uygulamanın Çalıştırılması
 
-Java ile (java ile çalıştırırken ayrıca mongo db bağlantılarını gözden geçirmeniz gerekmektedır, varsayılanda "mongo" hostuna bağlanmaya çalışacaktır):
+Java ile çalıştırma (java ile çalıştırırken ayrıca mongo db bağlantılarını gözden geçirmeniz gerekmektedır, varsayılanda "mongo" hostuna bağlanmaya çalışacaktır):
 
 ```bash
 ➜  java -jar target/configuration-manager-ui-0.1.0.jar --spring.profiles.active=test
 ```
 
-Docker ile [aşağıdaki mongo sunucusunu da kurulumunu yapacaktır]:
+Docker ile çalıştırma [aşağıdaki mongo sunucusunu da kurulumunu yapacaktır]:
 
 ```bash
 ➜  docker-compose -p configuration-manager-ui -f docker-compose.yml up -d 

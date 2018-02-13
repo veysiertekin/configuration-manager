@@ -67,7 +67,7 @@ String value = reader.getValue("key", String.class);
 
 #### 2.1 Yeni bir önbellek yapısı eklenmesi
 
-Cache yapısı baglantı arasına alınmış, dışarıdan bakıldığında sanki herhangi bir cache yapısı yokmuş gibi kurgulanmaktadır. Bunun için normal db client'larını tanımladığımız `ConfigurationClient` sınıfından oluşturulmuş yeni bir sınıf oluşturmamız gerekiyor.  Girdilerde gerçek veri bağlantısını sağlayan istemci yanında önbelleğine kadar sıklıkla güncelleyeceğimize zaman aşımı bilgilerini almamız gerekiyor:
+Cache yapısı baglantı arasına alınmış, dışarıdan bakıldığında sanki herhangi bir cache yapısı yokmuş gibi kurgulanmaktadır. Bunun için normal db client'larını tanımladığımız `ConfigurationClient` sınıfından oluşturulmuş yeni bir sınıf oluşturmamız gerekiyor.  Girdilerde gerçek veri bağlantısını sağlayan istemci yanında önbelleği ne kadar sıklıkla güncelleyeceğimize zaman aşımı bilgilerini almamız gerekiyor:
 
 ```java
 ...
