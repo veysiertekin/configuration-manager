@@ -1,20 +1,9 @@
 package challenge.code.configuration_manager.config;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.test.context.TestComponent;
-import org.springframework.validation.annotation.Validated;
-
-@TestComponent
-@Validated
-@ConfigurationProperties(prefix = "spring.data.mongodb")
 public class TestEmbeddedMongoProperties {
+    private String host = "localhost";
 
-    @NotBlank
-    private String host;
-
-    @NotBlank
-    private String database;
+    private String database = "test";
 
     public String getHost() {
         return host;

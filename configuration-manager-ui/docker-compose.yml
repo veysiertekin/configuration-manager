@@ -1,11 +1,27 @@
 version: '2.1'
 
 services:
-  configuration-manager:
+  mongo:
+    image: mongo:latest
+    ports:
+     - "27017:27017"
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/test --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - dev
+    restart: always
+
+  configuration-manager-ui:
     image: trendyol/configuration-manager-ui:0.1.0
     ports:
      - "8080:8080"
     mem_limit: 1G
+    depends_on:
+      mongo:
+        condition: service_healthy
     environment:
      - ACTIVE_PROFILES=test
      - XMS=512M
