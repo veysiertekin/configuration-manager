@@ -1,5 +1,6 @@
 package challenge.code.configuration_manager.api.repository;
 
+import challenge.code.configuration_manager.api.model.TestConstants;
 import challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder;
 import challenge.code.configuration_manager.api.model.document.ConfigurationDocument;
 import org.junit.Before;
@@ -14,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
@@ -43,10 +43,10 @@ public class ConfigurationRepositoryTest {
 
         data = configurationRepository.save(data);
         assertThat(data)
-                .hasFieldOrPropertyWithValue("applicationName", DUMMY_APPLICATION_NAME)
-                .hasFieldOrPropertyWithValue("name", DUMMY_PROPERTY_NAME)
-                .hasFieldOrPropertyWithValue("type", DUMMY_TYPE)
-                .hasFieldOrPropertyWithValue("value", DUMMY_VALUE)
+                .hasFieldOrPropertyWithValue("applicationName", TestConstants.DUMMY_APPLICATION_NAME)
+                .hasFieldOrPropertyWithValue("name", TestConstants.DUMMY_PROPERTY_NAME)
+                .hasFieldOrPropertyWithValue("type", TestConstants.DUMMY_TYPE)
+                .hasFieldOrPropertyWithValue("value", TestConstants.DUMMY_VALUE)
                 .extracting(ConfigurationDocument::getId)
                 .isNotNull();
     }
@@ -91,6 +91,6 @@ public class ConfigurationRepositoryTest {
     }
 
     private void cleanUpApplicationData() {
-        configurationRepository.removeByApplicationName(DUMMY_APPLICATION_NAME);
+        configurationRepository.removeByApplicationName(TestConstants.DUMMY_APPLICATION_NAME);
     }
 }

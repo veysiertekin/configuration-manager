@@ -26,8 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import java.util.ArrayList;
 
 import static challenge.code.configuration_manager.api.model.TestConstants.*;
-import static challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder.DUMMY_APPLICATION_NAME;
-import static challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder.DUMMY_ID;
+import static challenge.code.configuration_manager.api.model.TestConstants.DUMMY_APPLICATION_NAME;
+import static challenge.code.configuration_manager.api.model.TestConstants.DUMMY_ID;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Mockito.*;

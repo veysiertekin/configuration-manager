@@ -21,8 +21,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder.DUMMY_APPLICATION_NAME;
-import static challenge.code.configuration_manager.api.model.builder.MockConfigurationDocumentBuilder.DUMMY_ID;
+import static challenge.code.configuration_manager.api.model.TestConstants.DUMMY_APPLICATION_NAME;
+import static challenge.code.configuration_manager.api.model.TestConstants.DUMMY_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
