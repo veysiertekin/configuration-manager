@@ -1,8 +1,8 @@
-### Configuration Manager UI & Client
+## Configuration Manager UI & Client
 
 ---
 
-Her bir uygulamanın dökümantasyonu kendi klasörü altındadır:
+**Her bir uygulamanın dökümantasyonu kendi klasörü altındadır:**
 
 * [Configuration Manager UI dökümantasyonu için](configuration-manager-ui/README.md)
 
